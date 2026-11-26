@@ -1,11 +1,22 @@
 const express = require('express');
 const app = express();
-app.use(express.json());
-const users = { "null": "1234", "admin": "null123", "demo": "demo" };
-app.post('/login', (req,res)=>{
-  const {user,pass}=req.body;
-  if(users[user] && users[user]===pass) return res.json({ok:true,msg:"Bienvenido "+user});
-  return res.json({ok:false,msg:"Usuario o clave mal"});
+const PORT = process.env.PORT || 3000;
+
+app.use(express.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => {
+  res.send(`
+    <h1>Login Null</h1>
+    <form method="POST" action="/login">
+      <input name="user" placeholder="Usuario" required><br><br>
+      <input name="pass" type="password" placeholder="Contraseña" required><br><br>
+      <button>Entrar</button>
+    </form>
+  `);
 });
-app.get('/',(req,res)=>res.send("Servidor Null ON"));
-app.listen(process.env.PORT||3000,()=>console.log("ON"));
+
+app.post('/login', (req, res) => {
+  res.send(`Bienvenido ${req.body.user} 👊`);
+});
+
+app.listen(PORT, () => console.log('Servidor ON'));
